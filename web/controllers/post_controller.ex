@@ -31,8 +31,9 @@ defmodule BlogPhoenix.PostController do
   end
 
   def show(conn, %{"id" => id}) do
-    post = Repo.get!(Post, id)
-    render(conn, "show.html", post: post)
+    post = Repo.get(Post, id) |> Repo.preload([:comments])
+    changeset = Comment.changeset(%Comment{})
+    render(conn, "show.html", post: post, changeset: changeset)
   end
 
   def edit(conn, %{"id" => id}) do
